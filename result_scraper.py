@@ -1,7 +1,6 @@
 import requests
 
 RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
-
 REQUEST_DATA = {
     'reg_no':'',
     'pro_id':'1',
@@ -46,13 +45,18 @@ sub_hons = {'med':0, 'surg':0, 'gyn':0}
 
 reg_start = int(input("Enter the start reg no.: "))
 reg_end = int(input("Enter the end reg no.: "))
+write_to_file = int(input("Shall I output the result to a file? Enter 1 for yes, 0 for no: "))
+if write_to_file:
+    filename = input("Enter filename: ")
 
 for roll in range(reg_start,reg_end+1):
     REQUEST_DATA['reg_no'] = f'{roll}'
     res = requests.post(RESULT_URL, REQUEST_DATA)
 
     name = find_name(res.text)
-    if 't-danger' in name: continue
+    if 't-danger' in name: 
+        print(f'{roll}\t    \t--')
+        continue
     
     eligible_count+=1
     
@@ -60,8 +64,6 @@ for roll in range(reg_start,reg_end+1):
     hons_data = find_hons(res.text)
     fail_data = find_fail(res.text)
     place_data = find_place(res.text)
-
-    print(f'{roll}, {name}, {passed_idx}, {hons_data}')
 
     if passed_idx>0:
         results.append(f'{roll}\t{name}\tP\t \t{hons_data if hons_data else ""}\t{place_data if place_data else ""}\n')
@@ -77,13 +79,18 @@ for roll in range(reg_start,reg_end+1):
                 sub_hons['surg']+=1
             if place_data:
                 place_count+=1
+            print(f'{roll}\t{name}\thungkar')
+        else:
+            print(f'{roll}\t{name}\tmoxa')
     else:
         results.append(f'{roll}\t{name}\tF\t{fail_data}\t\n')
+        print(f'{roll}\t{name}\t404')
 
 print(pass_count / eligible_count)
 print(hons_count)
 print(sub_hons)
 print(place_count)
 
-with open('results_hons_filtered.csv', 'w') as f:
-    f.writelines(results)
+if write_to_file:
+    with open(filename, 'w') as f:
+        f.writelines(results)
