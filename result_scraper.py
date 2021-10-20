@@ -44,7 +44,10 @@ eligible_count = 0
 hons_count = 0
 sub_hons = {'med':0, 'surg':0, 'gyn':0}
 
-for roll in range(4305,4510):
+reg_start = int(input("Enter the start reg no.: "))
+reg_end = int(input("Enter the end reg no.: "))
+
+for roll in range(reg_start,reg_end+1):
     REQUEST_DATA['reg_no'] = f'{roll}'
     res = requests.post(RESULT_URL, REQUEST_DATA)
 
