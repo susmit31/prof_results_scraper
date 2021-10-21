@@ -1,4 +1,5 @@
 import requests
+import sys
 
 RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
 REQUEST_DATA = {
@@ -43,9 +44,9 @@ eligible_count = 0
 hons_count = 0
 sub_hons = {'med':0, 'surg':0, 'gyn':0}
 
-reg_start = int(input("Enter the start reg no.: "))
-reg_end = int(input("Enter the end reg no.: "))
-write_to_file = int(input("Shall I output the result to a file? Enter 1 for yes, 0 for no: "))
+reg_start = int(sys.argv[1])
+reg_end = int(sys.argv[2])
+write_to_file = int(sys.argv[3])
 if write_to_file:
     filename = input("Enter filename: ")
 
