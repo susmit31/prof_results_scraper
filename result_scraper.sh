@@ -6,13 +6,23 @@ SESS_ID=16
 EXAM_ID=32
 GDATA=99
 
-echo "Enter start reg no.: "
-read var_reg
+if ((${#1} == 0))
+then
+	echo "Enter start reg no.: "
+	read var_reg
 
-echo "Enter end reg no.: "
-read var_reg_max
+	echo "Enter end reg no.: "
+	read var_reg_max
+elif ((${#2} == 0))
+then
+	var_reg=$1
+	var_reg_max=$1
+else
+	var_reg=$1
+	var_reg_max=$2
+fi
 
-while (("$var_reg" < "$var_reg_max"))
+while (($var_reg <= $var_reg_max))
 	do
 		form_data="reg_no=$var_reg&pro_id=$PRO_ID&sess_id=$SESS_ID&exam_id=$EXAM_ID&gdata=$GDATA"
 		response=$(curl -s -X POST -d $form_data $REQ_URL)
