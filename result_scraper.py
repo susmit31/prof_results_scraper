@@ -96,7 +96,7 @@ for roll in range(reg_start,reg_end+1):
             f.writelines(results[-1])
     time.sleep(10)
     
-print(pass_count / eligible_count)
-print(hons_count)
-print(sub_hons)
-print(place_count)
+print(f"Pass percentage: {pass_count / eligible_count}")
+print(f"Honours holders: {hons_count}")
+print(f"Honours by subjects: {sub_hons}")
+print(f"Placed students: {place_count}")
