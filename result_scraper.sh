@@ -2,8 +2,8 @@
 
 REQ_URL="https://ducmc.com/ajax/get_program_by_exam.php"
 PRO_ID=1
-SESS_ID=16
-EXAM_ID=32
+SESS_ID=17
+EXAM_ID=201
 GDATA=99
 
 if ((${#1} == 0))

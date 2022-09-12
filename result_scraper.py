@@ -1,12 +1,16 @@
 import requests
 import sys
 
-RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
+if sys.argv[4]=="s":
+    RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
+else:
+    RESULT_URL = 'http://ducmc.com/ajax/get_program_by_exam.php'
+
 REQUEST_DATA = {
     'reg_no':'',
     'pro_id':'1',
-    'sess_id':'16',
-    'exam_id':'32',
+    'sess_id':'17',
+    'exam_id':'201',
     'gdata':'99'   
 }
 
@@ -80,18 +84,17 @@ for roll in range(reg_start,reg_end+1):
                 sub_hons['surg']+=1
             if place_data:
                 place_count+=1
-            print(f'{roll}\t{name}\thungkar')
+            print(f'{roll}\t{name}\tHonours')
         else:
-            print(f'{roll}\t{name}\tmoxa')
+            print(f'{roll}\t{name}\tPassed')
     else:
         results.append(f'{roll}\t{name}\tF\t{fail_data}\t\n')
         print(f'{roll}\t{name}\t404')
+    if write_to_file:
+        with open(filename, 'a') as f:
+            f.writelines(results[-1])
 
 print(pass_count / eligible_count)
 print(hons_count)
 print(sub_hons)
 print(place_count)
-
-if write_to_file:
-    with open(filename, 'w') as f:
-        f.writelines(results)
