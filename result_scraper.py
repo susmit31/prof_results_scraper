@@ -1,5 +1,6 @@
 import requests
 import sys
+import time
 
 if sys.argv[4]=="s":
     RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
@@ -93,7 +94,8 @@ for roll in range(reg_start,reg_end+1):
     if write_to_file:
         with open(filename, 'a') as f:
             f.writelines(results[-1])
-
+    time.sleep(5)
+    
 print(pass_count / eligible_count)
 print(hons_count)
 print(sub_hons)
