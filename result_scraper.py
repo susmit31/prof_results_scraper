@@ -94,7 +94,7 @@ for roll in range(reg_start,reg_end+1):
     if write_to_file:
         with open(filename, 'a') as f:
             f.writelines(results[-1])
-    time.sleep(10)
+    #time.sleep(1)
     
 print(f"Pass percentage: {pass_count / eligible_count}")
 print(f"Honours holders: {hons_count}")
