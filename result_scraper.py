@@ -122,7 +122,3 @@ print(f"Pass percentage: {pass_count / eligible_count}")
 print(f"Honours holders: {hons_count}")
 print(f"Honours by subjects: {sub_hons}")
 print(f"Placed students: {place_count}")
-
-with open("stats_17-18.csv","w") as f:
-    for clg in clg_stats:
-        f.write(f"{clg}\t{clg_stats[clg[0]]}\t{clg_stats[clg[1]]}\n")
