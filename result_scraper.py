@@ -10,8 +10,8 @@ else:
 REQUEST_DATA = {
     'reg_no':'',
     'pro_id':'1',
-    'sess_id':'17',
-    'exam_id':'201',
+    'sess_id':'18',
+    'exam_id':'200',
     'gdata':'99'   
 }
 
@@ -41,13 +41,20 @@ def find_place(text):
     pos_text = text[:3]
     return pos_text
 
+def find_college(text):
+    clg_idx_0 = text.find('College Name')
+    if clg_idx_0 == -1: return None
+    clg_idx_1 = text.find('</td>',clg_idx_0)
+    clg_name = text[clg_idx_0+len('College Name</th><td>'):clg_idx_1]
+    return clg_name
+
 results = []
 hons = []
 pass_count = 0
 place_count = 0
 eligible_count = 0
 hons_count = 0
-sub_hons = {'med':0, 'surg':0, 'gyn':0}
+sub_hons = {'micro':0, 'patho':0, 'pharma':0}
 
 reg_start = int(sys.argv[1])
 reg_end = int(sys.argv[2])
@@ -55,6 +62,7 @@ write_to_file = int(sys.argv[3])
 if write_to_file:
     filename = input("Enter filename: ")
 
+clg_stats = {}
 for roll in range(reg_start,reg_end+1):
     REQUEST_DATA['reg_no'] = f'{roll}'
     res = requests.post(RESULT_URL, REQUEST_DATA)
@@ -70,27 +78,41 @@ for roll in range(reg_start,reg_end+1):
     hons_data = find_hons(res.text)
     fail_data = find_fail(res.text)
     place_data = find_place(res.text)
+    clg_name = find_college(res.text)
 
+    if clg_name in clg_stats:
+        if passed_idx > 0:
+            clg_stats[clg_name][0] += 1
+        else:
+            clg_stats[clg_name][1] += 1
+    else:
+        clg_stats[clg_name] = [0,0] 
+        if passed_idx > 0:
+            clg_stats[clg_name][0] += 1
+        else:
+            clg_stats[clg_name][1] += 1
+        
+    
     if passed_idx>0:
-        results.append(f'{roll}\t{name}\tP\t \t{hons_data if hons_data else ""}\t{place_data if place_data else ""}\n')
+        results.append(f'{roll}\t{name}\tP\t \t{hons_data if hons_data else ""}\t{place_data if place_data else ""}\t{clg_name}\n')
         pass_count+=1
         if hons_data:
             hons_count+=1
             hons.append(f'{roll}\t{name}\t{hons_data}\n')
-            if 'Med' in hons_data:
-                sub_hons['med']+=1
-            if 'Gyn' in hons_data:
-                sub_hons['gyn']+=1
-            if 'Surg' in hons_data:
-                sub_hons['surg']+=1
+            if 'Micro' in hons_data:
+                sub_hons['micro']+=1
+            if 'Patho' in hons_data:
+                sub_hons['patho']+=1
+            if 'Pharma' in hons_data:
+                sub_hons['pharma']+=1
             if place_data:
                 place_count+=1
-            print(f'{roll}\t{name}\tHonours')
+            print(f'{roll}\t{name}\tHonours\t{clg_name}')
         else:
-            print(f'{roll}\t{name}\tPassed')
+            print(f'{roll}\t{name}\tPassed\t{clg_name}')
     else:
-        results.append(f'{roll}\t{name}\tF\t{fail_data}\t\n')
-        print(f'{roll}\t{name}\t404')
+        results.append(f'{roll}\t{name}\tF\t{fail_data}\t{clg_name}\n')
+        print(f'{roll}\t{name}\t404\t{clg_name}')
     if write_to_file:
         with open(filename, 'a') as f:
             f.writelines(results[-1])
@@ -100,3 +122,7 @@ print(f"Pass percentage: {pass_count / eligible_count}")
 print(f"Honours holders: {hons_count}")
 print(f"Honours by subjects: {sub_hons}")
 print(f"Placed students: {place_count}")
+
+with open("stats_17-18.csv","w") as f:
+    for clg in clg_stats:
+        f.write(f"{clg}\t{clg_stats[clg[0]]}\t{clg_stats[clg[1]]}\n")

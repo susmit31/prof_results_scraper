@@ -6,8 +6,8 @@ BEGIN {
 	END_DMC = 3841;
 	START_SSMC = 3882;
 	END_SSMC = 4097;
-	fromreg = START_SSMC;
-	uptoreg = END_SSMC;
+	fromreg = START_DMC;
+	uptoreg = 10000;
 }
 
 {
