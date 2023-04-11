@@ -10,8 +10,8 @@ else:
 REQUEST_DATA = {
     'reg_no':'',
     'pro_id':'1',
-    'sess_id':'18',
-    'exam_id':'200',
+    'sess_id':'20',
+    'exam_id':'365',
     'gdata':'99'   
 }
 
@@ -48,13 +48,15 @@ def find_college(text):
     clg_name = text[clg_idx_0+len('College Name</th><td>'):clg_idx_1]
     return clg_name
 
+subs = {'formed':"Forensic", 'commed':"Community"}
+
 results = []
 hons = []
 pass_count = 0
 place_count = 0
 eligible_count = 0
 hons_count = 0
-sub_hons = {'micro':0, 'patho':0, 'pharma':0}
+sub_hons = {k:0 for k in subs}
 
 reg_start = int(sys.argv[1])
 reg_end = int(sys.argv[2])
@@ -99,12 +101,9 @@ for roll in range(reg_start,reg_end+1):
         if hons_data:
             hons_count+=1
             hons.append(f'{roll}\t{name}\t{hons_data}\n')
-            if 'Micro' in hons_data:
-                sub_hons['micro']+=1
-            if 'Patho' in hons_data:
-                sub_hons['patho']+=1
-            if 'Pharma' in hons_data:
-                sub_hons['pharma']+=1
+            for sub in subs:
+                if subs[sub] in hons_data:
+                    sub_hons[sub]+=1
             if place_data:
                 place_count+=1
             print(f'{roll}\t{name}\tHonours\t{clg_name}')
