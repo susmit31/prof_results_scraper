@@ -1,10 +1,19 @@
-# Tunable parameters: 
-# sess_id, exam_id: need to look up a random result and examine the request
-# body to get these
-# SUBS: list containing names of subjects 
+# ==================== Usage =============================
+# ========================================================
+# result_scraper.py <START_REG> <END_REG> <SAVE_RESULTS>
+# ========================================================
+# ========================================================
 
+# Tunable parameters (in-code): 
+# S_ID: session ID
+# X_ID: exam ID
+# SUBS: list containing names of subjects
+
+X_ID = '365'
+S_ID = '20'
 SUBS = {'formed':"Forensic", 'commed':"Community"}
 
+import argparse
 import requests
 import sys
 import time
@@ -17,8 +26,8 @@ else:
 REQUEST_DATA = {
     'reg_no':'',
     'pro_id':'1',
-    'sess_id':'20',
-    'exam_id':'365',
+    'sess_id':S_ID,
+    'exam_id':X_ID,
     'gdata':'99'   
 }
 
@@ -106,8 +115,8 @@ for roll in range(reg_start,reg_end+1):
         if hons_data:
             hons_count+=1
             hons.append(f'{roll}\t{name}\t{hons_data}\n')
-            for sub in subs:
-                if subs[sub] in hons_data:
+            for sub in SUBS:
+                if sub in hons_data:
                     sub_hons[sub]+=1
             if place_data:
                 place_count+=1
