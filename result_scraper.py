@@ -1,11 +1,18 @@
+# Tunable parameters: 
+# sess_id, exam_id: need to look up a random result and examine the request
+# body to get these
+# SUBS: list containing names of subjects 
+
+SUBS = {'formed':"Forensic", 'commed':"Community"}
+
 import requests
 import sys
 import time
 
 if sys.argv[4]=="s":
-    RESULT_URL = 'https://ducmc.com/ajax/get_program_by_exam.php'
+    RESULT_URL = 'https://www.ducmc.com/ajax/get_program_by_exam.php'
 else:
-    RESULT_URL = 'http://ducmc.com/ajax/get_program_by_exam.php'
+    RESULT_URL = 'http://www.ducmc.com/ajax/get_program_by_exam.php'
 
 REQUEST_DATA = {
     'reg_no':'',
@@ -48,15 +55,13 @@ def find_college(text):
     clg_name = text[clg_idx_0+len('College Name</th><td>'):clg_idx_1]
     return clg_name
 
-subs = {'formed':"Forensic", 'commed':"Community"}
-
 results = []
 hons = []
 pass_count = 0
 place_count = 0
 eligible_count = 0
 hons_count = 0
-sub_hons = {k:0 for k in subs}
+sub_hons = {k:0 for k in SUBS}
 
 reg_start = int(sys.argv[1])
 reg_end = int(sys.argv[2])
