@@ -9,19 +9,16 @@
 # X_ID: exam ID
 # SUBS: list containing names of subjects
 
-X_ID = '365'
-S_ID = '20'
-SUBS = {'formed':"Forensic", 'commed':"Community"}
+X_ID = '1129'
+S_ID = '22'
+SUBS = {'pharm':"Pharmacology and Therapeutics", 'fm':"Forensic Medicine and Toxicology"}
 
 import argparse
 import requests
 import sys
 import time
 
-if sys.argv[4]=="s":
-    RESULT_URL = 'https://www.ducmc.com/ajax/get_program_by_exam.php'
-else:
-    RESULT_URL = 'http://www.ducmc.com/ajax/get_program_by_exam.php'
+RESULT_URL = 'https://www.cmc.du.ac.bd/ajax/get_program_by_exam.php'
 
 REQUEST_DATA = {
     'reg_no':'',
@@ -64,6 +61,8 @@ def find_college(text):
     clg_name = text[clg_idx_0+len('College Name</th><td>'):clg_idx_1]
     return clg_name
 
+print(sys.argv)
+
 results = []
 hons = []
 pass_count = 0
@@ -80,7 +79,7 @@ if write_to_file:
 
 clg_stats = {}
 for roll in range(reg_start,reg_end+1):
-    REQUEST_DATA['reg_no'] = f'{roll}'
+    REQUEST_DATA['reg_no'] = f"{roll}"
     res = requests.post(RESULT_URL, REQUEST_DATA)
 
     name = find_name(res.text)
@@ -110,7 +109,7 @@ for roll in range(reg_start,reg_end+1):
         
     
     if passed_idx>0:
-        results.append(f'{roll}\t{name}\tP\t \t{hons_data if hons_data else ""}\t{place_data if place_data else ""}\t{clg_name}\n')
+        results.append(f'{roll}\t{name}\tP\t{hons_data if hons_data else "-"}\t{place_data if place_data else "-"}\t{clg_name}\n')
         pass_count+=1
         if hons_data:
             hons_count+=1
@@ -124,7 +123,7 @@ for roll in range(reg_start,reg_end+1):
         else:
             print(f'{roll}\t{name}\tPassed\t{clg_name}')
     else:
-        results.append(f'{roll}\t{name}\tF\t{fail_data}\t{clg_name}\n')
+        results.append(f'{roll}\t{name}\tF\t{fail_data}\t-\t{clg_name}\n')
         print(f'{roll}\t{name}\t404\t{clg_name}')
     if write_to_file:
         with open(filename, 'a') as f:
